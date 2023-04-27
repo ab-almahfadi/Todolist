@@ -48,59 +48,8 @@ const listSchema = {
 
 const List = mongoose.model("List", listSchema);
 
-// app.get("/", async function(req, res) {
-//   const listName = req.body.list;
-//   const foundItems = await Item.find({});
-//   const foundItemsOnCustomList = await List.find({ name: listName }, { $pullAll: {} });
-
-
-
-//   async function foundAllItems() {
-//     try {
-//       const foundItems = await Item.find({});
-//       if (foundItems.length === 0) {
-//         async function insertDefaultItems() {
-//           try {
-//             await Item.insertMany(defaultItems);
-//             res.redirect("/");
-//           } catch (error) {
-//             console.log(error);
-//           }
-//         }
-
-//         insertDefaultItems();
-//       } else{
-//         res.render("list", { listTitle: "Today", newListItems: foundItems });
-//       }
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-//   foundAllItems();
-//   // if (foundItemsOnCustomList.items.length === 0) {
-//   // const foundItemsOnCustomList = await List.find({name: listName});
-  
-//   // // foundItemsOnCustomList.items.push(defaultItems);
-//   // // await foundList.save();
-//   //   async function insertDefaultItem() {
-      
-//   //       await List.insertMany({ name: listName }, { $push: { items: defaultItems } });
-//   //       res.redirect("/" + listName);
-      
-    
-
-    
-//   // }}
-//   // insertDefaultItem();
-// }); 
-
-
-
 app.get("/", async function(req, res) {
  
-
- 
-
   async function foundAllItems() {
     try {
       const foundItems = await Item.find({}) 
@@ -128,32 +77,6 @@ app.get("/", async function(req, res) {
 
 
 });
-
-
-// app.post("/", async function(req, res){
-
-//   const itemName = req.body.newItem;
-//   const listName = req.body.list;
-
-//   const item = new Item({
-//     name: itemName
-//   });
-
-//   if (listName === "Today"){
-
-//     item.save();
-//     res.redirect("/");
-
-//   } else{
-//  await List.findOne({name: listName}, function(err, foundList){
-//   foundList.items.push(item);
-//   foundList.save();
-//   res.redirect("/" + listName);
-// });
-//   }
-
-  
-// });
 
 app.post("/", async function(req, res){
 
@@ -208,65 +131,6 @@ app.post("/delete", async function(req, res){
   
   
 });
-
-// app.post("/:customListName/delete", async function(req, res){
-//   const checkedItemId = req.body.checkbox;
-//   const customListName = req.params.customListName;
-
-//   try {
-//     const foundList = await List.findOne({name: customListName});
-//     if (foundList) {
-//       // Check if the item to be deleted belongs to the current list
-//       const foundItem = foundList.items.find(item => item._id == checkedItemId);
-//       if (foundItem) {
-//         const deletedItem = await Item.findByIdAndDelete(checkedItemId);
-//         console.log("Item successfully deleted.");
-//         res.redirect("/" + customListName);
-//       } else {
-//         console.log("Item not found in the list.");
-//         res.redirect("/" + customListName);
-//       }
-//     } else {
-//       console.log("List not found.");
-//       res.redirect("/");
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     res.send("An error occurred while deleting the item.");
-//   }
-// });
-
-
-
-
-// app.get("/:customListName", function(req,res){
-
-//   const customListName = req.params.customListName;
-
-//   async function foundOne(){
-//     try{
-//     const foundList = await List.findOne({name: customListName});
-     
-//         if (!foundList) {
-//           console.log("Doesn't exist");
-//         } else {
-//           console.log("Exists");
-//         }
-       
-//   } catch (error) {
-//     console.log(error);
-//   }
-//   }
-
-//   foundOne();
-
-//   const list = new List({
-//     name: customListName,
-//     items: defaultItems
-//   });
-//   list.save();
-  
-// });
 
 app.get("/:customListName", async function(req, res){
   const customListName = _.capitalize(req.params.customListName);
