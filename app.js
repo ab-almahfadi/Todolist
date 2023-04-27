@@ -3,6 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const mongodb = require("mongodb");
 const date = require(__dirname + "/date.js");
 const _ = require("lodash");
 
@@ -16,7 +17,7 @@ app.use(express.static("public"));
 main().catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb+srv://admin-obad:11357900aa..@atlascluster.70y6xtb.mongodb.net/todolistDB?retryWrites=true&w=majority');
+  await mongoose.connect('mongodb+srv://admin-obad:11357900aa..@atlascluster.70y6xtb.mongodb.net/todolistDB');
 
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
