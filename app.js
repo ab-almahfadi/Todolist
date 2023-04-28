@@ -135,12 +135,12 @@ app.post("/delete", async function(req, res){
 
 app.get("/:customListName", async function(req, res){
   const customListName = _.capitalize(req.params.customListName);
-  const listName = req.body.list;
+  const listName = req.body.listName;
   try {
     const foundList = await List.findOne({name: customListName});
     const foundLists = await List.findOneAndUpdate({name: listName});
     if (foundList) {
-      if(foundLists.items.length === 0) {
+      if(foundList.items.length === 0) {
         async function insertDefaultItems() {
           try {
             await List.findOneAndUpdate({name: customListName}, {$push: {items: defaultItems}});
