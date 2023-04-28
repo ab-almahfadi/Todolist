@@ -1,26 +1,48 @@
 <%- include("header") -%>
 
-  <div class="box" id="heading">
-    <h1> <%= listTitle %> </h1>
-  </div>
 
-  <div class="box">
 
-    <%newListItems.forEach(function(item) {%>
-      <form action="/delete" method="post">
-        <div class="item">
-          <input type="checkbox" name="checkbox" value="<%= item._id %>" onChange="this.form.submit()">
-          <p><%=  item.name  %></p>
-        </div>
-        <input type="hidden" name="listName" value="<%= listTitle %>" id=""></input>
+<div class="box" id="heading">
+  <h1> <%= listTitle %> </h1>
+</div>
+
+<div class="box">
+  <%newListItems.forEach(function(item) {%>
+    <form action="/delete" method="post">
+      <div class="item">
+        <input type="checkbox" name="checkbox" value="<%= item._id %>" onChange="this.form.submit()">
+        <p><%=  item.name  %></p>
+      </div>
+      <input type="hidden" name="listName" value="<%= listTitle %>" id=""></input>
+    </form>
+  <% }) %>
+
+  <form class="item" action="/" method="post">
+    <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+    <button type="submit" name="list" value="<%= listTitle %>">+I</button>
+  </form>
+
+  <form class="item" action="/create" method="post">
+    <input type="text" name="listName" placeholder="New List Name" autocomplete="off">
+    <button type="submit">+L</button>
+  </form>
+
+  <ul>
+    <% lists.forEach(function(list) { %>
+      <form class="delete-form" action="/delete-list" method="post">
+        <div>
+        <li><a href="/<%= list.name %>"><%= list.name %></a></li>
+      </div>
+        <input type="hidden" name="listId" value="<%= list._id %>">
+        <button type="submit" class="btn btn-danger delete-btn">Delete</button>
+        <span><%= list.name %></span>
       </form>
-    
-        <% }) %>
+      
+    <% }) %>
+  </ul>
 
-      <form class="item" action="/" method="post">
-        <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
-        <button type="submit" name="list" value="<%= listTitle %>">+</button>
-      </form>
-  </div>
+ 
+
+</div>
 
 <%- include("footer") -%>

@@ -53,6 +53,7 @@ app.get("/", async function(req, res) {
  
   async function foundAllItems() {
     try {
+      const foundLists = await List.find({});
       const foundItems = await Item.find({}) 
       if (foundItems.length === 0) {
           async function insertDefaultItems() {
@@ -66,7 +67,7 @@ app.get("/", async function(req, res) {
           insertDefaultItems();
           res.redirect("/");
       }  else {
-        res.render("list", {listTitle: "Today", newListItems: foundItems});
+        res.render("list", {listTitle: "Today", newListItems: foundItems, lists: foundLists});
        
       }
       
@@ -104,6 +105,63 @@ app.post("/", async function(req, res){
   }
 });
 
+app.post("/create", async function(req, res){
+  const listName = _.capitalize(req.body.listName);
+
+  try {
+    const foundList = await List.findOne({name: listName});
+    
+    const foundLists = await List.find({});
+    if (foundList) {
+      if(foundList.items.length === 0) {
+        async function insertDefaultItems() {
+          try {
+            await List.findOneAndUpdate({name: listName}, {$push: {items: defaultItems}});
+            
+            console.log("insert default items");
+            } catch (error) {
+            console.log(error);
+          }
+        }
+        insertDefaultItems();
+        res.redirect("/" + listName);
+      }else{
+        console.log("List already exists in the database.");
+        res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: foundLists} );
+      }
+      
+    } else {
+      const list = new List({
+        name: listName,
+        items: defaultItems
+      });
+      await list.save();
+      res.redirect("/" + listName);
+      console.log("List created successfully.");
+      
+    }
+    
+    // 
+  } catch (error) {
+    console.log(error);
+    res.send("An error occurred while creating the list.");
+  }
+
+  // const list = new List({
+  //   name: listName,
+  //   items: defaultItems
+  // });
+
+  // try {
+  //   await list.save();
+  //   res.redirect("/" + listName);
+  // } catch (error) {
+  //   console.log(error);
+  //   res.send("An error occurred while creating the list.");
+  // }
+});
+
+
 
 app.post("/delete", async function(req, res){
   const checkedItemId = req.body.checkbox;
@@ -128,9 +186,14 @@ app.post("/delete", async function(req, res){
 } catch(error){
   console.log(error);
 }
+});
 
-  
-  
+app.post("/delete-list", async function(req, res) {
+  const listId = req.body.listId;
+
+  await List.findByIdAndDelete(listId);
+
+  res.redirect("/");
 });
 
 app.get("/:customListName", async function(req, res){
@@ -138,7 +201,8 @@ app.get("/:customListName", async function(req, res){
   const listName = req.body.listName;
   try {
     const foundList = await List.findOne({name: customListName});
-    const foundLists = await List.findOneAndUpdate({name: listName});
+    
+    const foundLists = await List.find({});
     if (foundList) {
       if(foundList.items.length === 0) {
         async function insertDefaultItems() {
@@ -154,7 +218,7 @@ app.get("/:customListName", async function(req, res){
         res.redirect("/" + customListName);
       }else{
         console.log("List already exists in the database.");
-        res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
+        res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: foundLists} );
       }
       
     } else {
@@ -175,6 +239,8 @@ app.get("/:customListName", async function(req, res){
   }
   
 });
+
+
 
 
 app.get("/about", function(req, res){
